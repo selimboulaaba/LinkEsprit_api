@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:4.4.6
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+    ports:
+      - 27017:27017
+    volumes:
+      - db:/data/db
+
+  app:
+    depends_on:
+      - mongodb
+    image: nidhalbrk/piweb_api:1.0.0
+    restart: unless-stopped
+    ports:
+      - 8083:8083
+    environment:
+      - MONGO_URI=mongodb://root:123456@mongodb:27017/piweb
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:
